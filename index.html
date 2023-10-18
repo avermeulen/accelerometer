@@ -21,6 +21,15 @@
 </body>
 
 <script>
+
+if (
+    DeviceMotionEvent &&
+    typeof DeviceMotionEvent.requestPermission === "function"
+  ) {
+    DeviceMotionEvent.requestPermission();
+  }
+
+
     function handleMotionEvent(event) {
         const x = event.accelerationIncludingGravity.x;
         const y = event.accelerationIncludingGravity.y;
