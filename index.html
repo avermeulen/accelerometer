@@ -10,6 +10,11 @@
     body {
       background-color: #a44;
     }
+
+    button {
+      padding: 1em;
+
+    }
   </style>
 </head>
 
@@ -25,7 +30,7 @@
 
   </div>
   <button class="btn start">Start</button>
-  <button class="btn stop">Start</button>
+  <button class="btn stop">Stop</button>
 </body>
 
 <script>
@@ -44,8 +49,12 @@
   }
 
   function stop() {
-    document.querySelector('.x').innerText = "stopped...";
+    
     window.removeEventListener("devicemotion", handleMotionEvent, true);
+    [".x", ".y", ".z"].forEach(field => document.querySelector(field).innerHTML = '');
+
+    document.querySelector('.x').innerText = "stopped...";
+
   }
 
   function start() {
