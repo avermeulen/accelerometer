@@ -6,6 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
 
+  <script src="<https://unpkg.com/mqtt/dist/mqtt.min.js>"></script>
+
+  <script>
+    // Globally initializes an mqtt variable
+    console.log(mqtt)
+  </script>
+
+
   <style>
     body {
       background-color: #a44;
@@ -79,6 +87,35 @@
 
 
 
+</script>
+
+<script>
+  const clientId = 'mqttjs_' + Math.random().toString(16).substr(2, 8)
+  const host = 'ws://167.71.14.151:9011/mqtt'
+  const options = {
+    keepalive: 60,
+    clientId: clientId,
+    protocolId: 'MQTT',
+    protocolVersion: 4,
+    clean: true,
+    reconnectPeriod: 1000,
+    connectTimeout: 30 * 1000,
+    will: {
+      topic: 'WillMsg',
+      payload: 'Connection Closed abnormally..!',
+      qos: 0,
+      retain: false
+    },
+  }
+  console.log('Connecting mqtt client')
+  const client = mqtt.connect(host, options)
+  client.on('error', (err) => {
+    console.log('Connection error: ', err)
+    client.end()
+  })
+  client.on('reconnect', () => {
+    console.log('Reconnecting...')
+  })
 </script>
 
 </html>
