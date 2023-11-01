@@ -2,54 +2,71 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
 
-    <style>
-        body {
-            background-color: #a44;
-        }
-    </style>
+  <style>
+    body {
+      background-color: #a44;
+    }
+  </style>
 </head>
 
 <body>
-    <h1>Accelerometer</h1>
-    <div class="x" >
+  <h1>Accelerometer</h1>
+  <div class="x">
 
-    </div>
-    <button class="btn" >Start</button>
+  </div>
+  <div class="y">
+
+  </div>
+  <div class="z">
+
+  </div>
+  <button class="btn start">Start</button>
+  <button class="btn stop">Start</button>
 </body>
 
 <script>
 
-document.querySelector('.x').innerText = "loaded...";
-
-document.querySelector(".btn").addEventListener("click", function() {
-
-if (
-  DeviceMotionEvent &&
-  typeof DeviceMotionEvent.requestPermission === "function"
-) {
-  DeviceMotionEvent.requestPermission();
-} else {
-  document.querySelector('.x').innerText = "No DeviceMotionEvent";
-}
-
+  document.querySelector('.x').innerText = "loaded...";
 
   function handleMotionEvent(event) {
-      const x = event.accelerationIncludingGravity.x;
-      const y = event.accelerationIncludingGravity.y;
-      const z = event.accelerationIncludingGravity.z;
+        const x = event.accelerationIncludingGravity.x;
+        const y = event.accelerationIncludingGravity.y;
+        const z = event.accelerationIncludingGravity.z;
 
-      document.querySelector('.x').innerText = x;
-  // Do something awesome.
+        document.querySelector('.x').innerText = x;
+        document.querySelector('.y').innerText = y;
+        document.querySelector('.z').innerText = z;
+        // Do something awesome.
   }
 
-  window.addEventListener("devicemotion", handleMotionEvent, true);
+  function stop() {
+    document.querySelector('.x').innerText = "stopped...";
+    window.removeEventListener("devicemotion", handleMotionEvent, true);
+  }
 
-})
+  function start() {
 
+      if (
+        DeviceMotionEvent &&
+        typeof DeviceMotionEvent.requestPermission === "function"
+      ) {
+        DeviceMotionEvent.requestPermission();
+      } else {
+        document.querySelector('.x').innerText = "No DeviceMotionEvent";
+      }
+
+
+
+      window.addEventListener("devicemotion", handleMotionEvent, true);
+
+  }
+
+  document.querySelector(".start").addEventListener("click", start)
+  document.querySelector(".stop").addEventListener("click", stop)
 
 
 
