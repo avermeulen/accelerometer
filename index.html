@@ -18,30 +18,41 @@
     <div class="x" >
 
     </div>
+    <button class="btn" >Start</button>
 </body>
 
 <script>
 
+document.querySelector('.x').innerText = "loaded...";
+
+document.querySelector(".btn").addEventListener("click", function() {
+
 if (
-    DeviceMotionEvent &&
-    typeof DeviceMotionEvent.requestPermission === "function"
-  ) {
-    DeviceMotionEvent.requestPermission();
-  } else {
-    document.querySelector('.x').innerText = "No DeviceMotionEvent";
+  DeviceMotionEvent &&
+  typeof DeviceMotionEvent.requestPermission === "function"
+) {
+  DeviceMotionEvent.requestPermission();
+} else {
+  document.querySelector('.x').innerText = "No DeviceMotionEvent";
+}
+
+
+  function handleMotionEvent(event) {
+      const x = event.accelerationIncludingGravity.x;
+      const y = event.accelerationIncludingGravity.y;
+      const z = event.accelerationIncludingGravity.z;
+
+      document.querySelector('.x').innerText = x;
+  // Do something awesome.
   }
 
+  window.addEventListener("devicemotion", handleMotionEvent, true);
 
-    function handleMotionEvent(event) {
-        const x = event.accelerationIncludingGravity.x;
-        const y = event.accelerationIncludingGravity.y;
-        const z = event.accelerationIncludingGravity.z;
+})
 
-        document.querySelector('.x').innerText = x;
-    // Do something awesome.
-    }
 
-    window.addEventListener("devicemotion", handleMotionEvent, true);
+
+
 </script>
 
 </html>
