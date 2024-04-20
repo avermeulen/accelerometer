@@ -83,7 +83,9 @@
   console.log('Connecting mqtt client')
   const client = mqtt.connect(host, options);
 
-  client.publish('wss/motion', 'ws connection demo...!', { qos: 0, retain: false })
+  client.publish('wss/motion', {
+    a : 17
+  }, { qos: 0, retain: false })
 
   const error = document.querySelector('.error');
 
@@ -107,7 +109,7 @@
         document.querySelector('.y').innerText = y;
         document.querySelector('.z').innerText = z;
 
-        client.publish('wss/motion', {x,y,z}, { qos: 0, retain: false })
+        client.publish('wss/motion', `{x:${x},y:${y},z:${z}}`, { qos: 0, retain: false })
 
 
         // Do something awesome.
