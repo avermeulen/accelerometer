@@ -16,12 +16,13 @@
 
   <style>
     body {
-      background-color: #a44;
+      background-color: dodgerblue;
     }
 
     button {
       padding: 1em;
-
+      border: 0.2em solid black;
+      width: 10em;
     }
   </style>
 </head>
@@ -43,6 +44,44 @@
 
 <script>
 
+  
+
+
+</script>
+
+<script>
+  const clientId = 'mqttjs_' + Math.random().toString(16).substr(2, 8)
+  const host = 'wss://app.tinkercloud.co.za:9001'
+  const options = {
+    keepalive: 60,
+    clientId: clientId,
+    protocolId: 'MQTT',
+    protocolVersion: 4,
+    clean: true,
+    reconnectPeriod: 1000,
+    connectTimeout: 30 * 1000,
+    will: {
+      topic: 'WillMsg',
+      payload: 'Connection Closed abnormally..!',
+      qos: 0,
+      retain: false
+    },
+  }
+  console.log('Connecting mqtt client')
+  const client = mqtt.connect(host, options);
+
+  client.publish('wss/testtopic', 'ws connection demo...!', { qos: 0, retain: false })
+
+
+
+  client.on('error', (err) => {
+    console.log('Connection error: ', err)
+    client.end()
+  })
+  client.on('reconnect', () => {
+    console.log('Reconnecting...')
+  })
+
   document.querySelector('.x').innerText = "loaded...";
 
   function handleMotionEvent(event) {
@@ -53,6 +92,10 @@
         document.querySelector('.x').innerText = x;
         document.querySelector('.y').innerText = y;
         document.querySelector('.z').innerText = z;
+
+        client.publish('motion', {x,y,z}, { qos: 0, retain: false })
+
+
         // Do something awesome.
   }
 
@@ -87,35 +130,6 @@
 
 
 
-</script>
-
-<script>
-  const clientId = 'mqttjs_' + Math.random().toString(16).substr(2, 8)
-  const host = 'ws://167.71.14.151:9011/mqtt'
-  const options = {
-    keepalive: 60,
-    clientId: clientId,
-    protocolId: 'MQTT',
-    protocolVersion: 4,
-    clean: true,
-    reconnectPeriod: 1000,
-    connectTimeout: 30 * 1000,
-    will: {
-      topic: 'WillMsg',
-      payload: 'Connection Closed abnormally..!',
-      qos: 0,
-      retain: false
-    },
-  }
-  console.log('Connecting mqtt client')
-  const client = mqtt.connect(host, options)
-  client.on('error', (err) => {
-    console.log('Connection error: ', err)
-    client.end()
-  })
-  client.on('reconnect', () => {
-    console.log('Reconnecting...')
-  })
 </script>
 
 </html>
