@@ -24,6 +24,13 @@
       border: 0.2em solid black;
       width: 10em;
     }
+
+    .error {
+      background-color: red;
+      color: white;
+      padding: 1em;
+    }
+
   </style>
 </head>
 
@@ -38,6 +45,12 @@
   <div class="z">
 
   </div>
+
+  <div class="error">
+
+  </div>
+
+
   <button class="btn start">Start</button>
   <button class="btn stop">Stop</button>
 </body>
@@ -70,12 +83,13 @@
   console.log('Connecting mqtt client')
   const client = mqtt.connect(host, options);
 
-  client.publish('wss/testtopic', 'ws connection demo...!', { qos: 0, retain: false })
+  client.publish('wss/motion', 'ws connection demo...!', { qos: 0, retain: false })
 
-
+  const error = document.querySelector('.error');
 
   client.on('error', (err) => {
     console.log('Connection error: ', err)
+    error.innerText = err;
     client.end()
   })
   client.on('reconnect', () => {
@@ -93,7 +107,7 @@
         document.querySelector('.y').innerText = y;
         document.querySelector('.z').innerText = z;
 
-        client.publish('motion', {x,y,z}, { qos: 0, retain: false })
+        client.publish('wss/motion', {x,y,z}, { qos: 0, retain: false })
 
 
         // Do something awesome.
