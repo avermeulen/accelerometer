@@ -23,12 +23,20 @@
       padding: 1em;
       border: 0.2em solid black;
       width: 10em;
+      margin: 1em;
     }
 
     .error {
       background-color: red;
       color: white;
       padding: 1em;
+    }
+
+    .motionType {
+      padding: 1em;
+      width: 10em;
+      margin: 1em;
+      border-radius: 0.25em;
     }
 
   </style>
@@ -48,6 +56,10 @@
 
   <div class="error">
 
+  </div>
+
+  <div>
+    <input class="motionType" type="text"  placeholder="enter motion type" >
   </div>
 
 
@@ -83,9 +95,8 @@
   console.log('Connecting mqtt client')
   const client = mqtt.connect(host, options);
 
-  client.publish('wss/motion', {
-    a : 17
-  }, { qos: 0, retain: false })
+  client.publish('wss/motion', `{a : 17}`
+  , { qos: 0, retain: false })
 
   const error = document.querySelector('.error');
 
@@ -97,21 +108,29 @@
   client.on('reconnect', () => {
     console.log('Reconnecting...')
   })
+  const xElem = document.querySelector('.x');
+  const yElem = document.querySelector('.y');
+  const zElem = document.querySelector('.z');
+  const motionType = document.querySelector('.motionType');
 
-  document.querySelector('.x').innerText = "loaded...";
+  xElem.innerText = "loaded...";
 
   function handleMotionEvent(event) {
         const x = event.accelerationIncludingGravity.x;
         const y = event.accelerationIncludingGravity.y;
         const z = event.accelerationIncludingGravity.z;
 
-        document.querySelector('.x').innerText = x;
-        document.querySelector('.y').innerText = y;
-        document.querySelector('.z').innerText = z;
+        xElem.innerText = x;
+        yElem.innerText = y;
+        zElem.innerText = z;
 
-        client.publish('wss/motion', `{x:${x},y:${y},z:${z}}`, { qos: 0, retain: false })
-
-
+        const motion = motionType.value;
+        if (motion) {
+          const msg = `movement, type="${motion}" x=${x}, y=${y}, z=${z}`
+          client.publish('wss/motion', msg, { qos: 0, retain: false })
+        } else {
+          er
+        }
         // Do something awesome.
   }
 
@@ -120,7 +139,7 @@
     window.removeEventListener("devicemotion", handleMotionEvent, true);
     [".x", ".y", ".z"].forEach(field => document.querySelector(field).innerHTML = '');
 
-    document.querySelector('.x').innerText = "stopped...";
+    xElem.innerText = "stopped...";
 
   }
 
@@ -132,10 +151,8 @@
       ) {
         DeviceMotionEvent.requestPermission();
       } else {
-        document.querySelector('.x').innerText = "No DeviceMotionEvent";
+        xElem.innerText = "No DeviceMotionEvent";
       }
-
-
 
       window.addEventListener("devicemotion", handleMotionEvent, true);
 
