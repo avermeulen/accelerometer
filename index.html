@@ -40,7 +40,6 @@
       margin: 1em;
       border-radius: 0.25em;
     }
-
   </style>
 </head>
 
@@ -61,7 +60,7 @@
   </div>
 
   <div>
-    <input class="motionType" type="text"  placeholder="enter motion type" >
+    <input class="motionType" type="text" placeholder="enter motion type">
   </div>
 
 
@@ -71,7 +70,7 @@
 
 <script>
 
-  
+
 
 
 </script>
@@ -98,7 +97,7 @@
   const client = mqtt.connect(host, options);
 
   client.publish('wss/motion', `{a : 17}`
-  , { qos: 0, retain: false })
+    , { qos: 0, retain: false })
 
   const error = document.querySelector('.error');
 
@@ -118,27 +117,31 @@
   xElem.innerText = "loaded...";
 
   function handleMotionEvent(event) {
-        const x = event.accelerationIncludingGravity.x;
-        const y = event.accelerationIncludingGravity.y;
-        const z = event.accelerationIncludingGravity.z;
+    try {
+      const x = event.accelerationIncludingGravity.x;
+      const y = event.accelerationIncludingGravity.y;
+      const z = event.accelerationIncludingGravity.z;
 
-        xElem.innerText = x;
-        yElem.innerText = y;
-        zElem.innerText = z;
+      xElem.innerText = x;
+      yElem.innerText = y;
+      zElem.innerText = z;
 
-        const motion = motionType.value;
-        if (motion) {
-          const timestamp = Date.now();
-          const msg = `movement,type=${motion} x=${x} y=${y} z=${z} ${timestamp.getTime()}`
-          client.publish('wss/motion', msg, { qos: 0, retain: false })
-        } else {
-          er
-        }
-        // Do something awesome.
+      const motion = motionType.value;
+      if (motion) {
+        const timestamp = Date.now();
+        const msg = `movement,type=${motion} x=${x} y=${y} z=${z} ${timestamp.getTime()}`
+        client.publish('wss/motion', msg, { qos: 0, retain: false })
+      } else {
+        error.innerText = "Please enter a motion type"
+      }
+    } catch (err) {
+      error.innerText = err;
+    }
+    // Do something awesome.
   }
 
   function stop() {
-    
+
     window.removeEventListener("devicemotion", handleMotionEvent, true);
     [".x", ".y", ".z"].forEach(field => document.querySelector(field).innerHTML = '');
 
@@ -148,16 +151,16 @@
 
   function start() {
 
-      if (
-        DeviceMotionEvent &&
-        typeof DeviceMotionEvent.requestPermission === "function"
-      ) {
-        DeviceMotionEvent.requestPermission();
-      } else {
-        xElem.innerText = "No DeviceMotionEvent";
-      }
+    if (
+      DeviceMotionEvent &&
+      typeof DeviceMotionEvent.requestPermission === "function"
+    ) {
+      DeviceMotionEvent.requestPermission();
+    } else {
+      xElem.innerText = "No DeviceMotionEvent";
+    }
 
-      window.addEventListener("devicemotion", handleMotionEvent, true);
+    window.addEventListener("devicemotion", handleMotionEvent, true);
 
   }
 
