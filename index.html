@@ -130,7 +130,7 @@
       error.innerText = motion;
       if (motion) {
         const timestamp = Date.now();
-        const msg = `movement,type=${motion} x=${x} y=${y} z=${z} ${timestamp}`
+        const msg = `movement,type=${motion} x=${x} y=${y} z=${z}`
         client.publish('wss/motion', msg, { qos: 0, retain: false })
       } else {
         error.innerText = "Please enter a motion type"
