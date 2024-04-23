@@ -134,7 +134,7 @@
           x,
           y,
           z}
-        const msg = `movement,type=${motion} data=${JSON.stringify(data)};`
+        const msg = `movement,type=${motion} coordinates=${JSON.stringify(data)};`
         client.publish('wss/motion', msg, { qos: 0, retain: false })
       } else {
         error.innerText = "Please enter a motion type"
